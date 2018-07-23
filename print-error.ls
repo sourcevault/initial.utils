@@ -27,7 +27,7 @@ print = (internal) ->
 print.of = (internal) -> new print(internal)
 
 
-print.prototype.create = (name,url,user_color = {}) ->
+print.create = (name,url,user_color = {}) ->
 
   color = seamless-immutable.merge color-static,user_color
 
@@ -39,13 +39,12 @@ print.prototype.create = (name,url,user_color = {}) ->
 
     ..url = url
 
-
   print.of internal
 
 
 print.prototype.getColor = -> @internal.color
 
-print.prototype.throwTypeError  = (text) ->
+print.prototype.throwTypeError  = (text) !->
 
   {color} = @internal
 
@@ -54,17 +53,12 @@ print.prototype.throwTypeError  = (text) ->
   url = color.highlight @internal.url
 
   err-text = color.normal """
-
-    [#{color.main-attention ('TYPE ERROR')}] from [#{name}]
-
+    [#{color.attention1 ('TYPE ERROR')}] from [#{name}]
       #{text}
       - more details on [#{name}] at:
-
         #{url}
-
   """
-
   console.log err-text
 
 
-modulue.exports = print
+module.exports = print

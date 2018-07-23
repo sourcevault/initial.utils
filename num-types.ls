@@ -3,59 +3,92 @@ R = require "ramda"
 
 seamless-immutable = require "seamless-immutable"
 
-identity = (type) -> (show) -> {show,type}
+common =  (type) ->
 
-base-show-handle =
+  nextType = type.concat [type.internal.baseType]
 
-  number:identity "number"
+  nextType
 
-  boolean:identity "boolean"
 
-  undefined:identity "undefined"
 
-  string:identity "string"
 
-  function:(x)-> (show:x.toString!,type:"function")
+base-map-show =
 
-  object:(input)->
+  number:common
+
+  boolean:common
+
+  undefined:common
+
+  string:common
+
+  function:common
+
+  object:(type)->
+
+    {input} = type.internal
 
     switch input
 
-    | null => (type:"null",show:"null")
+    | null =>
+
+      nextType = type.concat ["null"]
+
+      nextType
 
     | otherwise =>
 
-      show = JSON.stringify input,1,""
+      type.str = JSON.stringify input,1,""
 
       switch  Array.isArray input
 
-      | true => (type:"array",show:show)
+      | true =>
 
-      | otherwise => (type:"object",show:show)
+        nextType = type.concat ["array"]
+
+        nextType
+
+      | otherwise =>
+
+        nextType = type.concat ["object"]
+
+        nextType
 
 
-is-positive = (input) ->
 
-  if (0 <= input < Infinity)
+is-positive-number = (type) ->
 
-    true
+
+  if (0 <= type.internal.input < Infinity)
+
+    next = type.concat ["positive"]
+
+    [true,next]
 
   else
 
-    false
+    next = type.concat ["non-positive"]
 
-is-integer = (input) ->
+    [false,next]
+
+is-integer-number = (type) ->
+
+  {input} = type.internal
 
   diff = Math.abs (input - Math.round input)
 
   if diff is 0
 
-    true
+    next = type.concat ["integer"]
+
+    [true,next]
 
   else
 
-    false
+    next = type.concat ["non-integer"]
 
+
+    [false,next]
 
 type-class = (input) ->
 
@@ -69,23 +102,19 @@ type-class.of = (val) -> new typeClass(val)
 type-class.create = (input) ->
 
   input-type = typeof input
-
-  des-list = seamless-immutable []
-
   internal = {}
 
     ..input =  input
 
     ..base-type = input-type
 
-  {type,show} = base-show-handle[input-type] input
+    ..des = seamless-immutable []
 
-  internal.str = show
+  type = new typeClass (internal)
 
-  internal.des = des-list.concat type
 
-  new typeClass (internal)
 
+  base-map-show[input-type] type
 
 
 
@@ -108,8 +137,7 @@ type-class.prototype.concat = (add) ->
   type-class.of next-internal
 
 
-
-is-positive-real-number = (input) ->
+is-real-number = (input) ->
 
   type =  type-class.create input
 
@@ -117,46 +145,53 @@ is-positive-real-number = (input) ->
 
   | "number" =>
 
-    if (is-positive input)
+    next = type.concat ['real']
 
-      next = type.concat ['positive','real']
-
-      [true,next]
-
-    else
-
-      next = type.concat ['non-positive','real']
-
-      [false,next]
-
+    [true,next]
 
   | otherwise =>
 
     [false,type]
 
 
-is-positive-integer-number = (input) ->
+is-positive-real-number = (input) ->
 
-  [is-positive,type] = is-positive-real-number input
+  [is-real,type] = is-real-number input
 
+  if is-real
 
-  if is-positive
-
-    if is-integer input
-
-      next = type.concat ["integer"]
-
-      [true,next]
-
-    else
-
-      next = type.concat "non-integer"
-
-      [false,next]
+     is-positive-number type
 
   else
 
     [false,type]
+
+
+is-positive-integer-number = (input) ->
+
+
+  [is-real,type] = is-real-number input
+
+  if is-real
+
+    [is-positive,nex0] = type |> is-positive-number
+
+    [is-integer,nex1] = nex0 |> is-integer-number
+
+
+    if is-positive and is-integer
+
+      [true,nex1]
+
+    else
+
+      [false,nex1]
+
+  else
+
+    [false,type]
+
+
 
 
 
