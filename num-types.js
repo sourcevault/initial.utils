@@ -73,7 +73,7 @@ typeClass.create = function(input){
 };
 typeClass.prototype.show = function(joinWith){
   joinWith == null && (joinWith = " ");
-  return this.interal.des.join(joinWith);
+  return this.internal.des.join(joinWith);
 };
 typeClass.prototype.concat = function(add){
   var internal, nextDes, nextInternal;

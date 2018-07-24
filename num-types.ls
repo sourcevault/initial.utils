@@ -121,7 +121,7 @@ type-class.create = (input) ->
 
 type-class.prototype.show = (joinWith = " ") ->
 
-  @interal.des.join joinWith
+  @internal.des.join joinWith
 
 
 type-class.prototype.concat = (add) ->
