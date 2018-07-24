@@ -8,41 +8,41 @@ main = require "./main.js"
 
 
 
-[isinteger,info] = (isPositiveIntegerNumber !->)
+# [isinteger,info] = (isPositiveIntegerNumber !->)
 
-console.log isinteger
+# console.log isinteger
 
-console.log info
-
-
-
-[isinteger,info] = (isPositiveIntegerNumber {})
-
-console.log isinteger
-
-console.log info
-
-
-[isinteger,info] = (isPositiveIntegerNumber undefined)
-
-console.log isinteger
-
-console.log info
-
-
-[isinteger,info] = (isPositiveIntegerNumber null)
-
-console.log isinteger
-
-console.log info
+# console.log info
 
 
 
-[isinteger,info] = (isPositiveIntegerNumber [])
+# [isinteger,info] = (isPositiveIntegerNumber {})
 
-console.log isinteger
+# console.log isinteger
 
-console.log info
+# console.log info
+
+
+# [isinteger,info] = (isPositiveIntegerNumber undefined)
+
+# console.log isinteger
+
+# console.log info
+
+
+# [isinteger,info] = (isPositiveIntegerNumber null)
+
+# console.log isinteger
+
+# console.log info
+
+
+
+# [isinteger,info] = (isPositiveIntegerNumber [])
+
+# console.log isinteger
+
+# console.log info
 
 
 
@@ -61,16 +61,16 @@ console.log info
 
 
 
-[isinteger,info] = (isPositiveIntegerNumber -1.3)
+# [isinteger,info] = (isPositiveIntegerNumber -1.3)
 
-console.log isinteger
+# console.log isinteger
 
-console.log info
+# console.log info
 
-console.log "\n\n\n\n\n\n\n\n\n\n\n\n"
+# console.log "\n\n\n\n\n\n\n\n\n\n\n\n"
 
-print = print-error.create do
-  "hello"
-  "world"
+# print = print-error.create do
+#   "hello"
+#   "world"
 
-print.throwTypeError "hello"
+# print.throwTypeError "hello"

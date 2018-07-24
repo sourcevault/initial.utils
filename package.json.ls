@@ -19,7 +19,7 @@ main:"main.js"
 
 description :""
 
-version : "0.0.8"
+version : "0.0.9"
 
 repository:"github:sourcevault/initial.utils"
 

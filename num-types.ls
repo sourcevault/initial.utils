@@ -134,7 +134,7 @@ type-class.prototype.concat = (add) ->
   type-class.of next-internal
 
 
-is-real-number = (input) ->
+is-number = (input) ->
 
   type =  type-class.create input
 
@@ -142,9 +142,7 @@ is-real-number = (input) ->
 
   | "number" =>
 
-    next = type.concat ['real']
-
-    [true,next]
+    [true,type]
 
   | otherwise =>
 
@@ -153,7 +151,7 @@ is-real-number = (input) ->
 
 is-positive-real-number = (input) ->
 
-  [is-real,type] = is-real-number input
+  [is-real,type] = is-number input
 
   if is-real
 
@@ -167,7 +165,7 @@ is-positive-real-number = (input) ->
 is-positive-integer-number = (input) ->
 
 
-  [is-real,type] = is-real-number input
+  [is-real,type] = is-number input
 
   if is-real
 
