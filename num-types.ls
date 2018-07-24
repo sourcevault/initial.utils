@@ -117,11 +117,8 @@ type-class.create = (input) ->
   base-map-show[input-type] type
 
 
+type-class.prototype.getDes = -> @internal.des
 
-
-type-class.prototype.show = (joinWith = " ") ->
-
-  @internal.des.join joinWith
 
 
 type-class.prototype.concat = (add) ->

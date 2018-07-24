@@ -71,9 +71,8 @@ typeClass.create = function(input){
   type = new typeClass(internal);
   return baseMapShow[inputType](type);
 };
-typeClass.prototype.show = function(joinWith){
-  joinWith == null && (joinWith = " ");
-  return this.internal.des.join(joinWith);
+typeClass.prototype.getDes = function(){
+  return this.internal.des;
 };
 typeClass.prototype.concat = function(add){
   var internal, nextDes, nextInternal;
