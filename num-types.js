@@ -1,64 +1,57 @@
-var R, seamlessImmutable, identity, baseShowHandle, isPositive, isInteger, typeClass, isPositiveRealNumber, isPositiveIntegerNumber, publish;
+var R, seamlessImmutable, common, baseMapShow, isPositiveNumber, isIntegerNumber, typeClass, isRealNumber, isPositiveRealNumber, isPositiveIntegerNumber, publish;
 R = require("ramda");
 seamlessImmutable = require("seamless-immutable");
-identity = function(type){
-  return function(show){
-    return {
-      show: show,
-      type: type
-    };
-  };
+common = function(type){
+  var nextType;
+  nextType = type.concat([type.internal.baseType]);
+  return nextType;
 };
-baseShowHandle = {
-  number: identity("number"),
-  boolean: identity("boolean"),
-  undefined: identity("undefined"),
-  string: identity("string"),
-  'function': function(x){
-    return {
-      show: x.toString(),
-      type: "function"
-    };
-  },
-  object: function(input){
-    var show;
+baseMapShow = {
+  number: common,
+  boolean: common,
+  undefined: common,
+  string: common,
+  'function': common,
+  object: function(type){
+    var input, nextType;
+    input = type.internal.input;
     switch (input) {
     case null:
-      return {
-        type: "null",
-        show: "null"
-      };
+      nextType = type.concat(["null"]);
+      return nextType;
     default:
-      show = JSON.stringify(input, 1, "");
+      type.str = JSON.stringify(input, 1, "");
       switch (Array.isArray(input)) {
       case true:
-        return {
-          type: "array",
-          show: show
-        };
+        nextType = type.concat(["array"]);
+        return nextType;
       default:
-        return {
-          type: "object",
-          show: show
-        };
+        nextType = type.concat(["object"]);
+        return nextType;
       }
     }
   }
 };
-isPositive = function(input){
-  if (0 <= input && input < Infinity) {
-    return true;
+isPositiveNumber = function(type){
+  var ref$, next;
+  if (0 <= (ref$ = type.internal.input) && ref$ < Infinity) {
+    next = type.concat(["positive"]);
+    return [true, next];
   } else {
-    return false;
+    next = type.concat(["non-positive"]);
+    return [false, next];
   }
 };
-isInteger = function(input){
-  var diff;
+isIntegerNumber = function(type){
+  var input, diff, next;
+  input = type.internal.input;
   diff = Math.abs(input - Math.round(input));
   if (diff === 0) {
-    return true;
+    next = type.concat(["integer"]);
+    return [true, next];
   } else {
-    return false;
+    next = type.concat(["non-integer"]);
+    return [false, next];
   }
 };
 typeClass = function(input){
@@ -69,16 +62,14 @@ typeClass.of = function(val){
   return new typeClass(val);
 };
 typeClass.create = function(input){
-  var inputType, desList, x$, internal, ref$, type, show;
+  var inputType, x$, internal, type;
   inputType = typeof input;
-  desList = seamlessImmutable([]);
   x$ = internal = {};
   x$.input = input;
   x$.baseType = inputType;
-  ref$ = baseShowHandle[inputType](input), type = ref$.type, show = ref$.show;
-  internal.str = show;
-  internal.des = desList.concat(type);
-  return new typeClass(internal);
+  x$.des = seamlessImmutable([]);
+  type = new typeClass(internal);
+  return baseMapShow[inputType](type);
 };
 typeClass.prototype.show = function(joinWith){
   joinWith == null && (joinWith = " ");
@@ -91,33 +82,38 @@ typeClass.prototype.concat = function(add){
   nextInternal = seamlessImmutable.setIn(internal, ['des'], nextDes);
   return typeClass.of(nextInternal);
 };
-isPositiveRealNumber = function(input){
+isRealNumber = function(input){
   var type, next;
   type = typeClass.create(input);
   switch (type.internal.baseType) {
   case "number":
-    if (isPositive(input)) {
-      next = type.concat(['positive', 'real']);
-      return [true, next];
-    } else {
-      next = type.concat(['non-positive', 'real']);
-      return [false, next];
-    }
-    break;
+    next = type.concat(['real']);
+    return [true, next];
   default:
     return [false, type];
   }
 };
+isPositiveRealNumber = function(input){
+  var ref$, isReal, type;
+  ref$ = isRealNumber(input), isReal = ref$[0], type = ref$[1];
+  if (isReal) {
+    return isPositiveNumber(type);
+  } else {
+    return [false, type];
+  }
+};
 isPositiveIntegerNumber = function(input){
-  var ref$, isPositive, type, next;
-  ref$ = isPositiveRealNumber(input), isPositive = ref$[0], type = ref$[1];
-  if (isPositive) {
-    if (isInteger(input)) {
-      next = type.concat(["integer"]);
-      return [true, next];
+  var ref$, isReal, type, isPositive, nex0, isInteger, nex1;
+  ref$ = isRealNumber(input), isReal = ref$[0], type = ref$[1];
+  if (isReal) {
+    ref$ = isPositiveNumber(
+    type), isPositive = ref$[0], nex0 = ref$[1];
+    ref$ = isIntegerNumber(
+    nex0), isInteger = ref$[0], nex1 = ref$[1];
+    if (isPositive && isReal) {
+      return [true, nex1];
     } else {
-      next = type.concat("non-integer");
-      return [false, next];
+      return [false, nex1];
     }
   } else {
     return [false, type];

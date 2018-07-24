@@ -37,4 +37,4 @@ print.prototype.throwTypeError = function(text){
   errText = color.normal("\n[" + color.mainAttention('TYPE ERROR') + "] from [" + name + "]\n\n  " + text + "\n  - more details on [" + name + "] at:\n\n    " + url + "\n");
   return console.log(errText);
 };
-modulue.exports = print;
+module.exports = print;

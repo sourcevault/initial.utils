@@ -62,9 +62,9 @@ print.prototype.throwTypeError  = (text) ->
 
         #{url}
 
-  """
-
+  ""
+"
   console.log err-text
 
 
-modulue.exports = print
+module.exports = print
