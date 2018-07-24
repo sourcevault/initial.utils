@@ -71,9 +71,8 @@ typeClass.create = function(input){
   type = new typeClass(internal);
   return baseMapShow[inputType](type);
 };
-typeClass.prototype.show = function(joinWith){
-  joinWith == null && (joinWith = " ");
-  return this.interal.des.join(joinWith);
+typeClass.prototype.getDes = function(){
+  return this.internal.des;
 };
 typeClass.prototype.concat = function(add){
   var internal, nextDes, nextInternal;
@@ -110,7 +109,7 @@ isPositiveIntegerNumber = function(input){
     type), isPositive = ref$[0], nex0 = ref$[1];
     ref$ = isIntegerNumber(
     nex0), isInteger = ref$[0], nex1 = ref$[1];
-    if (isPositive && isReal) {
+    if (isPositive && isInteger) {
       return [true, nex1];
     } else {
       return [false, nex1];

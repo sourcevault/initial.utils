@@ -16,7 +16,7 @@ print = function(internal){
 print.of = function(internal){
   return new print(internal);
 };
-print.prototype.create = function(name, url, user_color){
+print.create = function(name, url, user_color){
   var color, x$, internal;
   user_color == null && (user_color = {});
   color = seamlessImmutable.merge(colorStatic, user_color);
@@ -34,7 +34,7 @@ print.prototype.throwTypeError = function(text){
   color = this.internal.color;
   name = color.highlight(this.internal.name);
   url = color.highlight(this.internal.url);
-  errText = color.normal("\n[" + color.mainAttention('TYPE ERROR') + "] from [" + name + "]\n\n  " + text + "\n  - more details on [" + name + "] at:\n\n    " + url + "\n");
-  return console.log(errText);
+  errText = color.normal("[" + color.attention1('TYPE ERROR') + "] from [" + name + "]\n  " + text + "\n  - more details on [" + name + "] at:\n    " + url);
+  console.log(errText);
 };
 module.exports = print;
