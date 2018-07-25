@@ -1,4 +1,4 @@
-var R, seamlessImmutable, common, baseMapShow, isPositiveNumber, isIntegerNumber, typeClass, isRealNumber, isPositiveRealNumber, isPositiveIntegerNumber, publish;
+var R, seamlessImmutable, common, baseMapShow, isPositiveNumber, isIntegerNumber, typeClass, isNumber, isPositiveRealNumber, isPositiveIntegerNumber, publish;
 R = require("ramda");
 seamlessImmutable = require("seamless-immutable");
 common = function(type){
@@ -81,20 +81,19 @@ typeClass.prototype.concat = function(add){
   nextInternal = seamlessImmutable.setIn(internal, ['des'], nextDes);
   return typeClass.of(nextInternal);
 };
-isRealNumber = function(input){
-  var type, next;
+isNumber = function(input){
+  var type;
   type = typeClass.create(input);
   switch (type.internal.baseType) {
   case "number":
-    next = type.concat(['real']);
-    return [true, next];
+    return [true, type];
   default:
     return [false, type];
   }
 };
 isPositiveRealNumber = function(input){
   var ref$, isReal, type;
-  ref$ = isRealNumber(input), isReal = ref$[0], type = ref$[1];
+  ref$ = isNumber(input), isReal = ref$[0], type = ref$[1];
   if (isReal) {
     return isPositiveNumber(type);
   } else {
@@ -103,7 +102,7 @@ isPositiveRealNumber = function(input){
 };
 isPositiveIntegerNumber = function(input){
   var ref$, isReal, type, isPositive, nex0, isInteger, nex1;
-  ref$ = isRealNumber(input), isReal = ref$[0], type = ref$[1];
+  ref$ = isNumber(input), isReal = ref$[0], type = ref$[1];
   if (isReal) {
     ref$ = isPositiveNumber(
     type), isPositive = ref$[0], nex0 = ref$[1];
