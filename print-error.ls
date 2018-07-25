@@ -54,6 +54,7 @@ print.prototype.throwTypeError  = (text) !->
 
   err-text = color.normal """
     [#{color.attention1 ('TYPE ERROR')}] from [#{name}]
+
       #{text}
       - more details on [#{name}] at:
         #{url}
